@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteo de Jugadores</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #000;
+      color: #fff; /* Color del texto en la página */
+      margin: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #66ccff;
+    }
+
+    div {
+      margin-bottom: 15px;
+      padding: 10px;
+      background-color: #333; /* Color de fondo de los bloques */
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Sombra sutil */
+    }
+
+    h2 {
+      color: #fff; /* Color del texto de los títulos */
+    }
+
+    #ganadores {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    #ganadorActivo, #ganadorMas100Partidas {
+      color: #66ccff; /* Color del texto para los ganadores */
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #333; /* Color de fondo del footer */
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    p {
+      color: #999; /* Color del texto del agradecimiento */
+      margin: 0; /* Elimina el margen predeterminado del párrafo */
+    }
+
+    a {
+      color: #66ccff; /* Color del enlace */
+      text-decoration: none; /* Elimina el subrayado predeterminado */
+    }
+
+    a:hover {
+      text-decoration: underline; /* Añade subrayado al pasar el mouse sobre el enlace */
+    }
+
+    #logo {
+      max-width: 40%;
+    }
+
+    #settChibi {
+      max-width: 100%; /* Ajusta al 100% del ancho del contenedor */
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <img id="logo" src="logo.png" alt="Logo de Sylar's Ladder Race">
+    <h2>Rifa de Sett Chibi</h2>
+  </header>
+  <main>
+    <div id="ganadores">
+      <div>
+        <h2>Ganadores del Sorteo</h2>
+        <div id="ganadorActivo"></div>
+        <div id="ganadorMas100Partidas"></div>
+      </div>
+    
+
+      <div>
+        <img id="settChibi" src="sett-chibi.png" alt="Sett Chibi a rifar">
+      </div>
+    </div>
+
+  <script>
+    // Lista de participantes con nombres y cantidad de partidas
+const participantes = [
+  [1, 'Ashito Aoi#0000', 161],
+  [2, 'K6 Seasøns#JAM', 93],
+  [3, 'HR Super Pino#LAN1', 147],
+  [4, 'HR Señor Cerdo#OINK', 139],
+  [5, 'NOC B4rz#srr', 162],
+  [6, 'viper lan#LAN', 127],
+  [7, 'Winnie Pai#1995', 136],
+  [8, 'N E O 乂#Mel', 139],
+  [9, 'RSN MyzteryAlex#RSN03', 147],
+  [10, 'HR Sungaro#Sunga', 98],
+  [11, 'CRG CousPrim#424', 112],
+  [12, 'Mondew#Setso', 113],
+  [13, 'Flyntch#LAN', 72],
+  [14, 'HR Mr Mugui#CDC', 124],
+  [15, 'Juanito #LAN', 183],
+  [16, 'Tacca#XDD', 114],
+  [17, 'HR Sonic#Sonic', 104],
+  [18, 'PD JuLiJuLi#LAN', 94],
+  [19, 'CRG Sval#5620', 64],
+  [20, 'DragonSlayerCob#LAN', 128],
+  [21, 'Draeko#1512', 66],
+  [22, 'visiatar#xdd', 74],
+  [23, 'HR HyperSpace#LAN2', 110],
+  [24, 'HR Clave#LAN', 64],
+  [25, 'Foxen Lee#LAN', 103],
+  [26, 'KingOblivion#1111', 85],
+  [27, 'HR vapaan#MAD', 109],
+  [28, 'MRNEMO#AAGTZ', 164],
+  [29, 'Jacko Sparda#LAN', 70],
+  [30, 'TTVDrZuloaga7#1993', 54],
+  [31, 'baza#LAN', 42],
+  [32, 'YipYips#KAPPA', 119],
+  [33, 'HR mariovap#Siuu', 33],
+  [34, 'THORNAVA#LAN', 73],
+  [35, 'Venomancer#piano', 67],
+  [36, 'GLG Pilot21#LAN', 51],
+  [37, 'MicroRocket#LAN', 74],
+  [38, 'Manny09#LAN', 128],
+  [39, 'AngelPrro98#2811', 51],
+  [40, 'mrco#LAN', 55],
+  [41, 'YuukiRin#02DDZ', 52],
+  [42, 'D0G Proto#LAN', 43],
+  [43, 'moonify#MOON', 61],
+  [44, 'AngelsPro#LAN', 93],
+  [45, 'Elbroncolinn#uwu', 45],
+  [46, 'hologramz#holo', 56],
+  [47, 'Picos#1107', 52],
+  [48, 'ElBuenLapras#LAN', 75],
+  [49, 'General Cipher#0137', 34],
+  [50, 'Killua#261', 30],
+  [51, 'BigBossRick#LAN', 42],
+  [52, 'FURION#LAN', 119],
+  [53, 'CRG Ubeowulf#1597', 44],
+  [54, 'LaPatronaArthe#UWU', 106],
+  [55, '金 Moon#Sun', 93],
+  [56, 'Alfa#SNIPE', 33],
+  [57, 'JaydenTFT#TTV', 89],
+  [58, 'LoL es Basura#LAN', 41],
+  [59, 'tzcart', 50],
+  [60, 'SoyTake#1394', 36],
+  [61, 'Pamelisha', 30],
+  [62, 'LuisitoPzGzxd#LAN', 13],
+  [63, 'Neko Miau TFT#LAN', 7],
+  [64, 'Kiky#Fay', 12],
+  ];
+  
+  // Función para realizar el sorteo
+  function realizarSorteo(participantes) {
+      // Filtrar participantes activos hasta hoy
+      const participantesActivos = participantes.filter(participante => participante[2] > 0);
+
+      // Filtrar participantes con más de 100 partidas
+      const participantesMas100Partidas = participantes.filter(participante => participante[2] > 100);
+
+      // Realizar sorteo entre participantes activos
+      const ganadorActivo = participantesActivos[Math.floor(Math.random() * participantesActivos.length)];
+
+      // Realizar sorteo entre participantes con más de 100 partidas
+      const ganadorMas100Partidas = participantesMas100Partidas[Math.floor(Math.random() * participantesMas100Partidas.length)];
+
+      return {
+        ganadorActivo,
+        ganadorMas100Partidas
+      };
+    }
+
+    // Ejecutar el sorteo
+    const resultadoSorteo = realizarSorteo(participantes);
+
+    // Imprimir los ganadores
+    document.getElementById('ganadorActivo').innerText = 'Ganador entre los participantes activos: ' + resultadoSorteo.ganadorActivo[1];
+    document.getElementById('ganadorMas100Partidas').innerText = 'Ganador entre los que jugaron más de 100 partidas: ' + resultadoSorteo.ganadorMas100Partidas[1];
+  </script>
+    </main>
+
+    <footer>
+      <p>Gracias al patrocinador: <a href="https://twitter.com/maikeltft" target="_blank">@maikeltft</a></p>
+    </footer>
+</body>
+</html>
